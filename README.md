@@ -12,6 +12,3 @@
 - [깃허브](https://github.com/roslyndev)
 - [페이스북](https://www.facebook.com/rosylndev)
 
-  
-### 주요 깃허브 레포지토리 링크 📂
-- [Woose.Library](https://github.com/roslyndev/Woose) : 저의 깃허브 페이지 소스 코드입니다.
