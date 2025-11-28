@@ -1,1 +1,105 @@
-<!doctype html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/favicon.ico"><title>withsinwoo</title><script defer="defer" src="/js/chunk-vendors.fc8864f8.js"></script><script defer="defer" src="/js/app.b0ba7497.js"></script><link href="/css/app.672cee2a.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but withsinwoo doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html>
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이상형 월드컵 모음</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .wc-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .wc-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .wc-card img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .wc-title {
+            font-family: 'Gamja Flower', cursive;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container py-5">
+        <div class="text-center mb-5 text-white animate-fade-in">
+            <h1 class="display-3 fw-bold main-title mb-3">🏆 이상형 월드컵 모음 🏆</h1>
+            <p class="lead">다양한 주제의 이상형 월드컵을 즐겨보세요!</p>
+        </div>
+
+        <!-- Dynamic Tournament List -->
+        <div id="tournament-list" class="row g-4">
+            <!-- Loading Spinner -->
+            <div class="text-center">
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const listContainer = document.getElementById('tournament-list');
+
+            try {
+                const response = await fetch('https://funapi.roslyn.dev/api/Tournaments');
+                if (!response.ok) throw new Error('Failed to fetch tournaments');
+
+                const tournaments = await response.json();
+
+                listContainer.innerHTML = ''; // Clear loading spinner
+
+                tournaments.forEach(t => {
+                    // Use a default image if none provided (API doesn't seem to have image in list, using seed based on ID)
+                    const imgUrl = `https://picsum.photos/seed/${t.id}/400/300`;
+
+                    const col = document.createElement('div');
+                    col.className = 'col-md-4 col-sm-6';
+                    col.innerHTML = `
+                        <div class="card wc-card h-100" onclick="location.href='detail.html?id=${t.id}'">
+                            <img src="${imgUrl}" class="card-img-top" alt="${t.title}">
+                            <div class="card-body text-center">
+                                <h5 class="card-title wc-title">${t.title}</h5>
+                                <p class="card-text text-muted">${t.description || '설명이 없습니다.'}</p>
+                                <button class="btn btn-primary rounded-pill px-4">시작하기</button>
+                            </div>
+                        </div>
+                    `;
+                    listContainer.appendChild(col);
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                listContainer.innerHTML = `<div class="text-center text-white"><p>목록을 불러오는데 실패했습니다.</p></div>`;
+            }
+        });
+    </script>
+</body>
+
+</html>
