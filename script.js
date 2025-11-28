@@ -3,8 +3,28 @@ let candidates = []; // Current round candidates
 let nextRoundCandidates = []; // Winners moving to next round
 let currentPairIndex = 0; // Index of the current pair being displayed
 let roundTitle = "16강"; // Current round title
-let totalRounds = 16; // Total matches in the current round (initially 8 for 16 candidates)
+let totalRounds = 8; // Total matches in the current round (initially 8 for 16 candidates)
 let currentRoundMatch = 0; // Current match number in the round
+
+// Dummy Data
+const dummyData = [
+    { name: "Candidate 1", img: "https://via.placeholder.com/300x400?text=Candidate+1" },
+    { name: "Candidate 2", img: "https://via.placeholder.com/300x400?text=Candidate+2" },
+    { name: "Candidate 3", img: "https://via.placeholder.com/300x400?text=Candidate+3" },
+    { name: "Candidate 4", img: "https://via.placeholder.com/300x400?text=Candidate+4" },
+    { name: "Candidate 5", img: "https://via.placeholder.com/300x400?text=Candidate+5" },
+    { name: "Candidate 6", img: "https://via.placeholder.com/300x400?text=Candidate+6" },
+    { name: "Candidate 7", img: "https://via.placeholder.com/300x400?text=Candidate+7" },
+    { name: "Candidate 8", img: "https://via.placeholder.com/300x400?text=Candidate+8" },
+    { name: "Candidate 9", img: "https://via.placeholder.com/300x400?text=Candidate+9" },
+    { name: "Candidate 10", img: "https://via.placeholder.com/300x400?text=Candidate+10" },
+    { name: "Candidate 11", img: "https://via.placeholder.com/300x400?text=Candidate+11" },
+    { name: "Candidate 12", img: "https://via.placeholder.com/300x400?text=Candidate+12" },
+    { name: "Candidate 13", img: "https://via.placeholder.com/300x400?text=Candidate+13" },
+    { name: "Candidate 14", img: "https://via.placeholder.com/300x400?text=Candidate+14" },
+    { name: "Candidate 15", img: "https://via.placeholder.com/300x400?text=Candidate+15" },
+    { name: "Candidate 16", img: "https://via.placeholder.com/300x400?text=Candidate+16" }
+];
 
 // DOM Elements
 const landingPage = document.getElementById('landing-page');
@@ -22,8 +42,27 @@ const name1 = document.getElementById('name-1');
 
 const roundTitleEl = document.getElementById('round-title');
 const progressBar = document.getElementById('game-progress');
-updateProgress();
-showPair();
+const winnerImg = document.getElementById('winner-img');
+const winnerName = document.getElementById('winner-name');
+
+// Start Game
+startBtn.addEventListener('click', () => {
+    landingPage.classList.add('d-none');
+    gamePage.classList.remove('d-none');
+    
+    // Initialize Game
+    candidates = [...dummyData];
+    // Shuffle candidates
+    candidates.sort(() => Math.random() - 0.5);
+    
+    nextRoundCandidates = [];
+    currentPairIndex = 0;
+    currentRoundMatch = 0;
+    roundTitle = "16강";
+    totalRounds = 8; // 16 candidates -> 8 matches
+    
+    updateProgress();
+    showPair();
 });
 
 // Show Current Pair
