@@ -4,6 +4,7 @@ body {
     font-family: 'Gamja Flower', cursive, sans-serif;
     color: white;
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
 .main-title {
