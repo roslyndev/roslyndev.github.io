@@ -6,6 +6,7 @@ let roundTitle = "16강"; // Current round title
 let totalRounds = 8; // Total matches in the current round (initially 8 for 16 candidates)
 let currentRoundMatch = 0; // Current match number in the round
 let currentTournamentId = null; // Store current tournament ID
+let currentWinner = null; // Store the winner
 
 // DOM Elements
 const landingPage = document.getElementById('landing-page');
@@ -169,6 +170,7 @@ function showWinner(winner) {
 
     winnerImg.src = winner.imageUrl;
     winnerName.textContent = winner.text;
+    currentWinner = winner;
 
     // Increment Selection Count API Call
     if (currentTournamentId && winner.id) {
@@ -188,11 +190,16 @@ restartBtn.addEventListener('click', () => {
 
 // Share Functionality
 shareBtn.addEventListener('click', async () => {
-    const winner = winnerName.textContent;
+    if (!currentWinner || !currentTournamentId) {
+        alert('공유할 정보가 없습니다.');
+        return;
+    }
+
+    const shareUrl = `https://funapi.roslyn.dev/share/${currentTournamentId}/${currentWinner.id}`;
     const shareData = {
         title: '이상형 월드컵 우승!',
-        text: `제 이상형 월드컵 우승자는 ${winner}입니다! 당신의 이상형도 찾아보세요.`,
-        url: window.location.href
+        text: `제 이상형 월드컵 우승자는 ${currentWinner.text}입니다! 당신의 이상형도 찾아보세요.`,
+        url: shareUrl
     };
 
     try {
