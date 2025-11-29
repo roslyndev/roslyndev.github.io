@@ -8,22 +8,22 @@ let currentRoundMatch = 0; // Current match number in the round
 
 // Dummy Data
 const dummyData = [
-    { name: "Candidate 1", img: "https://via.placeholder.com/300x400?text=Candidate+1" },
-    { name: "Candidate 2", img: "https://via.placeholder.com/300x400?text=Candidate+2" },
-    { name: "Candidate 3", img: "https://via.placeholder.com/300x400?text=Candidate+3" },
-    { name: "Candidate 4", img: "https://via.placeholder.com/300x400?text=Candidate+4" },
-    { name: "Candidate 5", img: "https://via.placeholder.com/300x400?text=Candidate+5" },
-    { name: "Candidate 6", img: "https://via.placeholder.com/300x400?text=Candidate+6" },
-    { name: "Candidate 7", img: "https://via.placeholder.com/300x400?text=Candidate+7" },
-    { name: "Candidate 8", img: "https://via.placeholder.com/300x400?text=Candidate+8" },
-    { name: "Candidate 9", img: "https://via.placeholder.com/300x400?text=Candidate+9" },
-    { name: "Candidate 10", img: "https://via.placeholder.com/300x400?text=Candidate+10" },
-    { name: "Candidate 11", img: "https://via.placeholder.com/300x400?text=Candidate+11" },
-    { name: "Candidate 12", img: "https://via.placeholder.com/300x400?text=Candidate+12" },
-    { name: "Candidate 13", img: "https://via.placeholder.com/300x400?text=Candidate+13" },
-    { name: "Candidate 14", img: "https://via.placeholder.com/300x400?text=Candidate+14" },
-    { name: "Candidate 15", img: "https://via.placeholder.com/300x400?text=Candidate+15" },
-    { name: "Candidate 16", img: "https://via.placeholder.com/300x400?text=Candidate+16" }
+    { id: 1, text: "Candidate 1", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+1" },
+    { id: 2, text: "Candidate 2", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+2" },
+    { id: 3, text: "Candidate 3", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+3" },
+    { id: 4, text: "Candidate 4", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+4" },
+    { id: 5, text: "Candidate 5", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+5" },
+    { id: 6, text: "Candidate 6", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+6" },
+    { id: 7, text: "Candidate 7", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+7" },
+    { id: 8, text: "Candidate 8", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+8" },
+    { id: 9, text: "Candidate 9", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+9" },
+    { id: 10, text: "Candidate 10", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+10" },
+    { id: 11, text: "Candidate 11", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+11" },
+    { id: 12, text: "Candidate 12", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+12" },
+    { id: 13, text: "Candidate 13", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+13" },
+    { id: 14, text: "Candidate 14", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+14" },
+    { id: 15, text: "Candidate 15", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+15" },
+    { id: 16, text: "Candidate 16", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+16" }
 ];
 
 // DOM Elements
@@ -49,18 +49,18 @@ const winnerName = document.getElementById('winner-name');
 startBtn.addEventListener('click', () => {
     landingPage.classList.add('d-none');
     gamePage.classList.remove('d-none');
-    
+
     // Initialize Game
     candidates = [...dummyData];
     // Shuffle candidates
     candidates.sort(() => Math.random() - 0.5);
-    
+
     nextRoundCandidates = [];
     currentPairIndex = 0;
     currentRoundMatch = 0;
     roundTitle = "16강";
     totalRounds = 8; // 16 candidates -> 8 matches
-    
+
     updateProgress();
     showPair();
 });
@@ -70,11 +70,11 @@ function showPair() {
     const c1 = candidates[currentPairIndex * 2];
     const c2 = candidates[currentPairIndex * 2 + 1];
 
-    img0.src = c1.img;
-    name0.textContent = c1.name;
+    img0.src = c1.imageUrl;
+    name0.textContent = c1.text;
 
-    img1.src = c2.img;
-    name1.textContent = c2.name;
+    img1.src = c2.imageUrl;
+    name1.textContent = c2.text;
 }
 
 // Handle Selection
@@ -137,8 +137,8 @@ function showWinner(winner) {
     gamePage.classList.add('d-none');
     resultPage.classList.remove('d-none');
 
-    winnerImg.src = winner.img;
-    winnerName.textContent = winner.name;
+    winnerImg.src = winner.imageUrl;
+    winnerName.textContent = winner.text;
 
     // Confetti effect could be added here
 }
