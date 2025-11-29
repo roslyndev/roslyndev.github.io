@@ -33,7 +33,12 @@ async function initGameData() {
     const tournamentId = urlParams.get('id');
 
     if (!tournamentId) {
-        alert('잘못된 접근입니다. 메인 페이지로 이동합니다.');
+        await Swal.fire({
+            icon: 'error',
+            title: '잘못된 접근',
+            text: '메인 페이지로 이동합니다.',
+            confirmButtonText: '확인'
+        });
         window.location.href = 'index.html';
         return;
     }
@@ -51,7 +56,12 @@ async function initGameData() {
         const items = data.items || (Array.isArray(data) ? data : []);
 
         if (items.length < 2) {
-            alert('후보가 부족하여 게임을 진행할 수 없습니다.');
+            await Swal.fire({
+                icon: 'warning',
+                title: '후보 부족',
+                text: '후보가 부족하여 게임을 진행할 수 없습니다.',
+                confirmButtonText: '확인'
+            });
             return;
         }
 
@@ -65,7 +75,12 @@ async function initGameData() {
 
     } catch (error) {
         console.error('Error loading tournament:', error);
-        alert('토너먼트 정보를 불러오는데 실패했습니다.');
+        await Swal.fire({
+            icon: 'error',
+            title: '오류 발생',
+            text: '토너먼트 정보를 불러오는데 실패했습니다.',
+            confirmButtonText: '확인'
+        });
         window.location.href = 'index.html';
     }
 }
@@ -145,9 +160,21 @@ window.selectOption = function (choiceIndex) {
 
             // Small delay for smooth transition
             setTimeout(() => {
-                alert(`${roundTitle}을 시작합니다!`); // Optional: simple alert or modal
-                updateProgress();
-                showPair();
+                Swal.fire({
+                    title: `${roundTitle} 시작!`,
+                    text: '다음 라운드를 진행합니다.',
+                    icon: 'info',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    backdrop: `
+                        rgba(0,0,123,0.4)
+                        left top
+                        no-repeat
+                    `
+                }).then(() => {
+                    updateProgress();
+                    showPair();
+                });
             }, 100);
         }
     } else {
@@ -191,7 +218,12 @@ restartBtn.addEventListener('click', () => {
 // Share Functionality
 shareBtn.addEventListener('click', async () => {
     if (!currentWinner || !currentTournamentId) {
-        alert('공유할 정보가 없습니다.');
+        Swal.fire({
+            icon: 'warning',
+            title: '주의',
+            text: '공유할 정보가 없습니다.',
+            confirmButtonText: '확인'
+        });
         return;
     }
 
@@ -208,7 +240,12 @@ shareBtn.addEventListener('click', async () => {
         } else {
             // Fallback for browsers that don't support Web Share API
             await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
-            alert('결과가 클립보드에 복사되었습니다! 원하는 곳에 붙여넣기 하세요.');
+            Swal.fire({
+                icon: 'success',
+                title: '복사 완료!',
+                text: '결과가 클립보드에 복사되었습니다! 원하는 곳에 붙여넣기 하세요.',
+                confirmButtonText: '확인'
+            });
         }
     } catch (err) {
         console.error('Share failed:', err);
