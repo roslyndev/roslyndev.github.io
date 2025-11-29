@@ -6,26 +6,6 @@ let roundTitle = "16강"; // Current round title
 let totalRounds = 8; // Total matches in the current round (initially 8 for 16 candidates)
 let currentRoundMatch = 0; // Current match number in the round
 
-// Dummy Data
-const dummyData = [
-    { id: 1, text: "Candidate 1", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+1" },
-    { id: 2, text: "Candidate 2", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+2" },
-    { id: 3, text: "Candidate 3", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+3" },
-    { id: 4, text: "Candidate 4", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+4" },
-    { id: 5, text: "Candidate 5", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+5" },
-    { id: 6, text: "Candidate 6", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+6" },
-    { id: 7, text: "Candidate 7", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+7" },
-    { id: 8, text: "Candidate 8", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+8" },
-    { id: 9, text: "Candidate 9", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+9" },
-    { id: 10, text: "Candidate 10", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+10" },
-    { id: 11, text: "Candidate 11", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+11" },
-    { id: 12, text: "Candidate 12", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+12" },
-    { id: 13, text: "Candidate 13", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+13" },
-    { id: 14, text: "Candidate 14", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+14" },
-    { id: 15, text: "Candidate 15", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+15" },
-    { id: 16, text: "Candidate 16", imageUrl: "https://via.placeholder.com/300x400?text=Candidate+16" }
-];
-
 // DOM Elements
 const landingPage = document.getElementById('landing-page');
 const gamePage = document.getElementById('game-page');
@@ -45,21 +25,68 @@ const progressBar = document.getElementById('game-progress');
 const winnerImg = document.getElementById('winner-img');
 const winnerName = document.getElementById('winner-name');
 
+// Initialize Game Data
+async function initGameData() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tournamentId = urlParams.get('id');
+
+    if (!tournamentId) {
+        alert('잘못된 접근입니다. 메인 페이지로 이동합니다.');
+        window.location.href = 'index.html';
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://funapi.roslyn.dev/api/Tournaments/${tournamentId}`);
+        if (!response.ok) throw new Error('Failed to fetch tournament data');
+
+        const data = await response.json();
+
+        // Handle API response structure
+        // Assuming data.items is the array of candidates
+        const items = data.items || (Array.isArray(data) ? data : []);
+
+        if (items.length < 2) {
+            alert('후보가 부족하여 게임을 진행할 수 없습니다.');
+            return;
+        }
+
+        candidates = items;
+
+        // Update Title if available
+        if (data.title) {
+            const mainTitle = document.querySelector('.main-title');
+            if (mainTitle) mainTitle.textContent = `🏆 ${data.title} 🏆`;
+        }
+
+    } catch (error) {
+        console.error('Error loading tournament:', error);
+        alert('토너먼트 정보를 불러오는데 실패했습니다.');
+        window.location.href = 'index.html';
+    }
+}
+
 // Start Game
 startBtn.addEventListener('click', () => {
+    if (candidates.length === 0) return;
+
     landingPage.classList.add('d-none');
     gamePage.classList.remove('d-none');
 
-    // Initialize Game
-    candidates = [...dummyData];
     // Shuffle candidates
     candidates.sort(() => Math.random() - 0.5);
 
     nextRoundCandidates = [];
     currentPairIndex = 0;
     currentRoundMatch = 0;
-    roundTitle = "16강";
-    totalRounds = 8; // 16 candidates -> 8 matches
+
+    // Calculate initial rounds based on candidate count
+    const count = candidates.length;
+    if (count >= 32) { roundTitle = "32강"; totalRounds = 16; }
+    else if (count >= 16) { roundTitle = "16강"; totalRounds = 8; }
+    else if (count >= 8) { roundTitle = "8강"; totalRounds = 4; }
+    else if (count >= 4) { roundTitle = "4강"; totalRounds = 2; }
+    else { roundTitle = "결승"; totalRounds = 1; }
 
     updateProgress();
     showPair();
@@ -170,3 +197,6 @@ shareBtn.addEventListener('click', async () => {
         console.error('Share failed:', err);
     }
 });
+
+// Load data on start
+initGameData();
