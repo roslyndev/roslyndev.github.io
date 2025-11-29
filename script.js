@@ -5,6 +5,7 @@ let currentPairIndex = 0; // Index of the current pair being displayed
 let roundTitle = "16강"; // Current round title
 let totalRounds = 8; // Total matches in the current round (initially 8 for 16 candidates)
 let currentRoundMatch = 0; // Current match number in the round
+let currentTournamentId = null; // Store current tournament ID
 
 // DOM Elements
 const landingPage = document.getElementById('landing-page');
@@ -35,6 +36,8 @@ async function initGameData() {
         window.location.href = 'index.html';
         return;
     }
+
+    currentTournamentId = tournamentId;
 
     try {
         const response = await fetch(`https://funapi.roslyn.dev/api/Tournaments/${tournamentId}`);
@@ -166,6 +169,13 @@ function showWinner(winner) {
 
     winnerImg.src = winner.imageUrl;
     winnerName.textContent = winner.text;
+
+    // Increment Selection Count API Call
+    if (currentTournamentId && winner.id) {
+        fetch(`https://funapi.roslyn.dev/api/Tournaments/${currentTournamentId}/items/${winner.id}/select`, {
+            method: 'POST'
+        }).catch(err => console.error('Failed to increment selection count:', err));
+    }
 
     // Confetti effect could be added here
 }
